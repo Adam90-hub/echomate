@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EchoMate: Comprehensive Echo Calculators</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1e40af">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="EchoMate">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-192.png">
+<link rel="apple-touch-startup-image" href="icon-512.png">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+body {font-family:'Inter',sans-serif;min-height:100vh;background:#bfdbfe;padding:1rem;}
+.main-wrap{max-width:600px;margin:0 auto;}
+.label-multiline{white-space:pre-line;line-height:1.6;}
+.option-btn{transition:all .15s ease-in-out;box-shadow:0 1px 3px rgba(0,0,0,0.12);}
+.option-btn:hover{box-shadow:0 6px 16px rgba(0,0,0,0.18);}
+.input-field{
+  border:1px solid #D1D5DB;padding:.75rem;border-radius:.5rem;width:100%;box-sizing:border-box;
+  transition:border-color .2s;
+}
+.input-field:focus{
+  outline:none;border-color:#1D4ED8;box-shadow:0 0 0 3px rgba(29,78,216,0.3);
+}
+.info-box{
+  background:#f0f9ff;padding:0.75rem;border-left:4px solid #0ea5e9;border-radius:.5rem;
+  font-size:.65rem;line-height:1.4;color:#0c4a6e;
+}
+/* HOMEPAGE STYLES */
+.home-mode body{background:#bfdbfe;color:#1e293b;display:flex;justify-content:center;}
+.home-mode #header h1{font-size:2.1rem;font-weight:800;color:#1e40af;margin-bottom:0;}
+.home-mode #header p{font-size:.75rem;color:#1e40af;font-weight:500;}
+#header h1{font-size:2.1rem;font-weight:800;}
+#header p{font-size:.75rem;font-weight:500;}
+.home-mode #calculator-card{
+  background:#dbeafe !important;border:1px solid #a5b4fc !important;
+  border-radius:1rem !important;padding:1rem !important;
+  box-shadow:0 10px 25px rgba(30,64,138,0.18) !important;
+}
+.home-mode .btn-list{
+  display:flex;flex-direction:column;gap:0.5rem;
+  padding-top:0 0.5rem;
+  padding-bottom:0.5rem;
+}
+.home-mode .home-option-btn{
+  color:#fff;font-weight:600;font-size:1rem;padding:1rem 0.5rem;border:none;
+  border-radius:.75rem;box-shadow:0 1px 3px rgba(0,0,0,0.12);
+  transition:transform .15s ease,box-shadow .15s ease;
+  text-align:left;display:flex;flex-direction:row;align-items:center;gap:0.75rem;
+}
+.home-mode .home-option-btn img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  object-fit: cover;
+  margin-left: 0.25rem;
+}
+.home-mode .home-option-btn .text-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.home-mode .home-option-btn .title {
+  font-size: clamp(0.80rem, 3.2vw, 1rem);
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.home-mode .home-option-btn p {
+  font-size: clamp(0.58rem, 2.5vw, 0.75rem);
+  opacity: .9;
+  margin-top: .25rem;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.home-mode .home-option-btn:hover{
+  transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,0.3);
+}
+.home-mode .btn-list .home-option-btn:nth-child(1){background:linear-gradient(135deg,#3b82f6,#1e40af);}
+.home-mode .btn-list .home-option-btn:nth-child(2){background:linear-gradient(135deg,#1e40af,#2563eb);}
+.home-mode .btn-list .home-option-btn:nth-child(3){background:linear-gradient(135deg,#1d4ed8,#3b82f6);}
+.home-mode .btn-list .home-option-btn:nth-child(4){background:linear-gradient(135deg,#2563eb,#60a5fa);}
+.home-mode .btn-list .home-option-btn:nth-child(5){background:linear-gradient(135deg,#1e40af,#4f46e5);}
+.home-mode .btn-list .home-option-btn:nth-child(6){background:linear-gradient(135deg,#1e3a8a,#6366f1);}
+.home-mode .btn-list .home-option-btn:nth-child(7){background:linear-gradient(135deg,#1d4ed8,#7c3aed);}
+.home-mode .btn-list .home-option-btn:nth-child(8){background:linear-gradient(135deg,#2563eb,#7c3aed);}
+.home-mode .btn-list .home-option-btn:nth-child(9){background:linear-gradient(135deg,#4f46e5,#7c3aed);}
+/* Pulsing waves */
+@keyframes colorPulse {
+  0%, 100% { stroke: #3b82f6; }
+  50% { stroke: #93c5fd; }
+}
+.soundwave {
+  animation: colorPulse 1.6s ease-in-out infinite;
+}
+.soundwave:nth-child(2) { animation-delay: 0.2s; }
+.soundwave:nth-child(3) { animation-delay: 0.4s; }
+.soundwave:nth-child(4) { animation-delay: 0.6s; }
+</style>
+</head>
+<body class="text-gray-800">
+<div class="main-wrap">
+  <header id="header" class="text-center mb-3 pt-4">
+    <div class="flex items-center justify-center gap-1">
+      <h1 class="text-4xl font-extrabold text-blue-800 mb-0">EchoMate</h1>
+      <svg width="36" height="36" viewBox="0 0 24 24" class="inline-block -mt-1">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#1e40af"/>
+        <path d="M15.4 7.4 Q17.9 8.9 15.4 11.4 Q17.4 9.4 15.4 7.4" fill="#e0f2fe" stroke="#3b82f6" stroke-width="1.0" stroke-linecap="round" class="soundwave"/>
+        <path d="M17.4 5.9 Q20.4 8.4 17.4 11.9 Q19.9 8.9 17.4 5.9" fill="#e0f2fe" stroke="#3b82f6" stroke-width="1.0" stroke-linecap="round" class="soundwave"/>
+        <path d="M19.4 4.4 Q23.4 7.9 19.4 13.4 Q22.9 8.4 19.4 4.4" fill="#e0f2fe" stroke="#3b82f6" stroke-width="1.0" stroke-linecap="round" class="soundwave"/>
+        <path d="M21.4 2.9 Q25.4 7.9 21.4 15.9 Q24.9 7.9 21.4 2.9" fill="#e0f2fe" stroke="#3b82f6" stroke-width="1.0" stroke-linecap="round" class="soundwave"/>
+      </svg>
+    </div>
+    <p class="text-xs text-blue-800 font-medium">Comprehensive Echo Suite for Educational Use</p>
+  </header>
+  <div id="calculator-card" class="bg-white p-6 rounded-xl shadow-2xl shadow-blue-100 border border-gray-100">
+    <div id="content" class="min-h-72">
+      <p class="text-center text-gray-500 mt-28">Initializing application...</p>
+    </div>
+    <div id="navigation" class="mt-8 flex justify-between gap-4"></div>
+  </div>
+</div>
+
+<script>
+/* STATE */
+let currentView = 'home';
+let currentStepId = '';
+let ageGroup = '';
+const history = [];
+let contentBox, navigationBox;
+
+/* HOME MODE */
+function setHomeMode(on) {
+  document.body.classList.toggle('home-mode', on);
+}
+
+/* HOME SCREEN */
+function renderHome() {
+  currentView = 'home';
+  setHomeMode(true);
+  contentBox.innerHTML = `
+    <div class="btn-list">
+      <button class="home-option-btn" onclick="startDiastolicCalculator()">
+        <img src="icons/diastolic.png" alt="Diastolic Function Icon">
+        <div class="text-content">
+          <div class="title">Diastolic Function &amp; LAP Estimation</div>
+          <p>(Based on proposed 2025 Guidelines)</p>
+        </div>
+      </button>
+      <button class="home-option-btn" onclick="startLapphCalculator()">
+        <img src="icons/lap-ph.png" alt="">
+        <div class="text-content">
+          <div class="title">LAP with Pulmonary Hypertension</div>
+          <p>(LAP Estimation in Moderate–Severe PH)</p>
+        </div>
+      </button>
+      <button class="home-option-btn" onclick="startMaclapCalculator()">
+        <img src="icons/mac-lap.png" alt="MAC LAP Icon">
+        <div class="text-content">
+          <div class="title">Mean LAP in Moderate/Severe MAC</div>
+          <p>(E/A Ratio &amp; IVRT Pathway)</p>
+        </div>
+      </button>
+      <button class="home-option-btn" onclick="startTransplantLAPCalculator()">
+        <img src="icons/transplant-lap.png" alt="Transplant LAP Icon">
+        <div class="text-content">
+          <div class="title">LAP in Heart Transplant Recipients</div>
+          <p>(LAP estimation in sinus rhythm)</p>
+        </div>
+      </button>
+      <button class="home-option-btn" onclick="startConstrictionCalculator()">
+        <img src="icons/constriction.png" alt="Constriction Icon">
+        <div class="text-content">
+          <div class="title">Constriction or Restriction?</div>
+          <p>(Differentiating constriction vs. restrictive CMP)</p>
+        </div>
+      </button>
+      <button class="home-option-btn" onclick="startPressureRecovery()">
+        <img src="icons/pressure-recovery.png" alt="Pressure Recovery Icon">
+        <div class="text-content">
+          <div class="title">Pressure Recovery Calculator</div>
+          <p>(Aortic Flow Correction)</p>
+        </div>
+      </button>
+      <button class="home-option-btn" onclick="startPHCalculator()">
+        <img src="icons/ph.png" alt="Pulmonary Hypertension Icon">
+        <div class="text-content">
+          <div class="title">Pulmonary Hypertension Calculator</div>
+          <p>(mPAP and PAEDP)</p>
+        </div>
+      </button>
+      <button class="home-option-btn" onclick="startRespiratoryVariation()">
+        <img src="icons/respiratory-variation.png" alt="Respiratory Variation Icon">
+        <div class="text-content">
+          <div class="title">Respiratory Variation Calculator</div>
+          <p>(Respiratory variation in cardiac tamponade)</p>
+        </div>
+      </button>
+      <button class="home-option-btn" onclick="startCardiacOutput()">
+        <img src="icons/cardiac-output.png" alt="Cardiac Output Icon">
+        <div class="text-content">
+          <div class="title">Cardiac Output &amp; Stroke Volume</div>
+          <p>(LVOT-based Doppler)</p>
+        </div>
+      </button>
+    </div>`;
+  navigationBox.innerHTML = '';
+}
+
+/* STARTER */
+const start = (view, fn, ...args) => {
+  currentView = view;
+  setHomeMode(false);
+  history.length = 0;
+  fn(...args);
+};
+
+window.startDiastolicCalculator = () => start('diastolic', () => { ageGroup=''; renderCalculator(diastolicSteps,'Rhythm'); });
+window.startLapphCalculator = () => start('lapph', () => { ageGroup=''; renderLapphCalculator('EA_Ratio'); });
+window.startMaclapCalculator = () => start('maclap', renderMaclapCalculator, 'EA_Ratio');
+window.startTransplantLAPCalculator = () => start('transplantLAP', renderTransplantLAPCalculator, 'EE_Ratio');
+window.startConstrictionCalculator = () => start('constriction', renderConstrictionCalculator, 'InitialCheck');
+window.startPressureRecovery = () => start('pressureRecovery', renderPressureRecoveryCalculator);
+window.startPHCalculator = () => start('pulmonaryHypertension', renderPHCalculator);
+window.startRespiratoryVariation = () => start('respiratoryVariation', renderRespiratoryVariationCalculator);
+window.startCardiacOutput = () => start('cardiacOutput', renderCardiacOutputCalculator);
+window.goHome = () => { currentView='home'; currentStepId=''; history.length=0; ageGroup=''; renderHome(); };
+
+/* BACK */
+function goBack() {
+  if (history.length === 0) return;
+  const prev = history.pop();
+  if (currentView === 'diastolic') renderCalculator(diastolicSteps, prev);
+  else if (currentView === 'lapph') renderLapphCalculator(prev);
+  else if (currentView === 'maclap') renderMaclapCalculator(prev);
+  else if (currentView === 'constriction') renderConstrictionCalculator(prev);
+  else if (currentView === 'transplantLAP') renderTransplantLAPCalculator(prev);
+}
+
+/* GENERIC RENDERER */
+function renderGeneric(steps, title, stepId, onAgeSelect = null, showRef = false, refText = '', refLink = '') {
+  currentStepId = stepId;
+  const step = steps[stepId];
+  if (!step) return;
+  
+  if (step.outcome) {
+    const map = {green:'bg-green-100 text-green-800 border-green-300',
+                 red:'bg-red-100 text-red-800 border-red-300',
+                 yellow:'bg-yellow-100 text-yellow-800 border-yellow-300',
+                 orange:'bg-orange-100 text-orange-800 border-orange-300',
+                 gray:'bg-gray-100 text-gray-800 border-gray-300'};
+    const cls = map[step.color] || 'bg-gray-100 text-gray-800 border-gray-300';
+    const note = step.note ? `<p class="text-sm mt-2 text-gray-600">${step.note}</p>` : '';
+    const refHTML = showRef ? `<p class="mt-2 text-xs text-black text-center">${refText}</p><p class="text-xs text-black text-center"><a href="${refLink}" target="_blank" class="underline hover:text-blue-700 text-xs">DOI: ${new URL(refLink).pathname.split('/').pop()}</a></p>` : '';
+    const footer = `<p class="mt-4 text-xs font-normal text-black text-center">Disclaimer: For educational use only. Not for sole clinical decision-making.</p>${refHTML}`;
+    contentBox.innerHTML = `<h2 class="text-lg font-bold text-center mb-3 text-blue-700" style="font-size: clamp(0.9rem, 4vw, 1.125rem);">${title}</h2><div class="p-6 text-center border-2 rounded-xl mt-4 ${cls}"><p class="text-2xl font-extrabold">${step.outcome}</p>${note}</div>${footer}`;
+    navigationBox.innerHTML = `<button onclick="goHome()" class="w-1/3 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg shadow-md hover:bg-gray-300 transition">Home</button><button onclick="window['start'+currentView.charAt(0).toUpperCase()+currentView.slice(1)+'Calculator']()" class="w-2/3 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition">Reset</button>`;
+    return;
+  }
+  
+  const q = typeof step.question === 'function' ? step.question() : step.question;
+  const extra = step.infoBox || '';
+  contentBox.innerHTML = `<h2 class="text-lg font-bold text-center mb-3 text-blue-700" style="font-size: clamp(0.9rem, 4vw, 1.125rem);">${title}</h2>
+    <p class="mb-4 text-sm font-semibold text-gray-600 label-multiline">${q}</p>
+    <div id="option-buttons" class="flex flex-col gap-3 mt-4"></div>${extra}`;
+  const container = document.getElementById('option-buttons');
+  for (const [txt, next] of Object.entries(step.options)) {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn w-full py-3 px-4 text-left bg-gray-50 border border-gray-200 rounded-lg text-base font-medium text-gray-800 hover:bg-blue-50 hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 label-multiline';
+    btn.innerHTML = txt;
+    btn.onclick = () => {
+      if (onAgeSelect && stepId.includes('Age')) onAgeSelect(txt);
+      history.push(stepId);
+      renderGeneric(steps, title, next, onAgeSelect, showRef, refText, refLink);
+    };
+    container.appendChild(btn);
+  }
+  let nav = `<button onclick="goHome()" class="w-1/3 py-2 px-4 bg-gray-200 text-gray-700 font-semibold rounded-lg shadow-sm hover:bg-gray-300 transition">Home</button>`;
+  if (history.length > 0) nav += `<button id="prev-btn" class="w-2/3 py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg shadow-sm hover:bg-blue-600 transition">Previous</button>`;
+  navigationBox.innerHTML = nav;
+  if (history.length > 0) document.getElementById('prev-btn').onclick = goBack;
+}
+
+/* SPECIFIC RENDERERS */
+function renderCalculator(steps, stepId) { 
+  renderGeneric(steps, "Diastolic Function & LAP", stepId, age => ageGroup = age, true, 'Nagueh et al. (2025). J Am Soc Echocardiogr, 38(7), 537–569.', 'https://doi.org/10.1016/j.echo.2025.03.011'); 
+}
+
+function renderMaclapCalculator(stepId) { 
+  renderGeneric(macLAPSteps, "Mean LAP in MAC", stepId, null, true, 'Nagueh et al. (2025). J Am Soc Echocardiogr, 38(7), 537–569.', 'https://doi.org/10.1016/j.echo.2025.03.011'); 
+}
+
+function renderConstrictionCalculator(stepId) { 
+  renderGeneric(constrictionSteps, "Constriction vs Restriction", stepId, null, true, 'Nagueh et al. (2025). J Am Soc Echocardiogr, 38(7), 537–569.', 'https://doi.org/10.1016/j.echo.2025.03.011'); 
+}
+
+function renderLapphCalculator(stepId) { 
+  renderGeneric(lapPHSteps, "LAP with Pulmonary Hypertension", stepId, age => ageGroup = age, true, 'Nagueh et al. (2025). J Am Soc Echocardiogr, 38(7), 537–569.', 'https://doi.org/10.1016/j.echo.2025.03.011'); 
+}
+
+function renderTransplantLAPCalculator(stepId) { 
+  renderGeneric(transplantLAPSteps, "LAP in Heart Transplant Recipients", stepId, null, true, 'Nagueh et al. (2025). J Am Soc Echocardiogr, 38(7), 537–569.', 'https://doi.org/10.1016/j.echo.2025.03.011'); 
+}
+
+/* PATHWAY DATA */
+const diastolicSteps = {
+  Rhythm:{
+    question:"What is the patient's heart rhythm?",
+    options:{"Sinus rhythm":"Age","Atrial fibrillation (AF)":"AFStep1"}
+  },
+  Age:{
+    question:"What is the patient's age group?",
+    options:{"20–39 years":"PrimaryIndicators","40–65 years":"PrimaryIndicators",">65 years":"PrimaryIndicators"},
+    infoBox:`<div class="info-box mt-4">
+      <p class="leading-tight">Use only for patients in sinus rhythm without severe primary MR, any MS, moderate/severe MAC, AFib, HTX, non-cardiac PH, pericardial constriction, LVAD, or any history of mitral valve repair/replacement (including M-TEER)</p>
+    </div>`
+  },
+  PrimaryIndicators:{
+    question:()=>{
+      const t={"20–39 years":"septal e' <7, lateral e' <10, avg. e' <9","40–65 years":"septal e' <6, lateral e' <8, avg. e' <7",">65 years":"septal e' <6, lateral e' <7, avg. e' <6.5"};
+      return `Which of the following is evident?\n(Age group: ${ageGroup})\n\n1. ${t[ageGroup]}\n2. E/e' avg ≥14 OR septal ≥15 OR lateral ≥13\n3. TR ≥2.8 m/s OR PASP ≥35 mmHg`;
+    },
+    options:{"None are abnormal":"Normal","Reduced e' only":"EA1","Increased E/e' or Elevated TR/PASP only":"SecondaryMarkers","Any two are abnormal":"SecondaryMarkers","All are abnormal":"EAFinal"}
+  },
+  EA1:{
+    question:"What is the Mitral E/A ratio?",
+    options:{"≤ 0.8":"Grade1Normal","> 0.8":"SecondaryMarkers"}
+  },
+  SecondaryMarkers:{
+    question:`Are one or more of the following secondary markers present?\n\n• PV S/D ≤ 0.67\n• LARS ≤ 18% (LA reservoir strain)\n• LAVI > 34 mL/m² (LA volume index)\nAlternatively\n• IVRT ≤ 70 ms`,
+    options:{"Yes":"EA2","No":"Grade1Normal"},
+    infoBox:`<div class="info-box mt-4">
+      <p class="leading-tight">Parameters that substitute for the three primary measurements: PR end-diastolic velocity ≥ 2 m/s, PA diastolic pressure ≥ 16 mmHg, L-wave velocity ≥ 50 cm/s, Ar-A duration > 30 ms, an E/A ratio reduction (upon Valsalva) of ≥ 50 cm/s.</p>
+    </div>`
+  },
+  EA2:{
+    question:"What is the Mitral E/A ratio?",
+    options:{"< 2":"Grade2Mild","≥ 2":"Grade2Severe"}
+  },
+  EAFinal:{
+    question:"What is the Mitral E/A ratio?",
+    options:{"< 2":"Grade2Mild","≥ 2":"Grade2Severe"}
+  },
+  AFStep1:{
+    question:`How many of the following 4 markers are abnormal?\n\n• Mitral E ≥ 100 cm/s\n• Septal E/e' > 11\n• TR > 2.8 m/s or PASP > 35 mmHg\n• DT ≤ 160 ms (Deceleration time)`,
+    options:{"0 or 1 abnormal":"AFNormal","3 or 4 abnormal":"AFElevated","Exactly 2 abnormal":"AFStep2"}
+  },
+  AFStep2:{
+    question:`For the Indeterminate group, how many of the following 3 markers are abnormal?\n\n• LARS < 18% (LA reservoir strain)\n• PV S/D < 1 (Pulmonary vein S/D ratio)\n• BMI > 30 kg/m²`,
+    options:{"0 abnormal":"AFNormal","1 abnormal (or unavailable/unreliable)":"AFIndeterminate","2 or 3 abnormal":"AFElevated"}
+  },
+  Normal:{outcome:"Normal Diastolic Function (Normal LAP)",color:"green"},
+  Grade1Normal:{outcome:"Grade 1 Diastolic Dysfunction (Normal LAP)",color:"green"},
+  Grade2Mild:{outcome:"Grade 2 Diastolic Dysfunction (Mild/Mod ↑ LAP)",color:"orange"},
+  Grade2Severe:{outcome:"Grade 3 Diastolic Dysfunction (Marked ↑ LAP)",color:"red"},
+  AFNormal:{outcome:"Normal LAP",color:"green"},
+  AFElevated:{outcome:"Elevated LAP",color:"red"},
+  AFIndeterminate:{outcome:"Indeterminate LAP",color:"yellow"}
+};
+
+const macLAPSteps = {
+  EA_Ratio:{
+    question:"What is the Mitral E/A ratio?",
+    options:{"< 0.8":"NormalLAP","0.8 – 1.8":"IVRT","> 1.8":"ElevatedLAP"}
+  },
+  IVRT:{
+    question:"What is the Isovolumic Relaxation Time (IVRT)?",
+    options:{"≥ 80 ms":"NormalLAP","< 80 ms":"ElevatedLAP"}
+  },
+  NormalLAP:{outcome:"Suggestive of: Normal LA Pressure",color:"green"},
+  ElevatedLAP:{outcome:"Suggestive of: Elevated LA Pressure",color:"red"}
+};
+
+const constrictionSteps = {
+  InitialCheck:{
+    question:`Does the patient have:<br>• Mitral E/A <span class="font-bold">> 0.8</span> and<br>• Dilated Inferior Vena Cava (IVC) with reduced collapse?`,
+    options:{"Yes":"RespiroSeptal","No":"Unlikely"}
+  },
+  Unlikely:{
+    outcome:"Constriction or Restriction is Unlikely",
+    color:"gray",
+    note:"Consider (?) alternative diagnoses."
+  },
+  RespiroSeptal:{
+    question:"Is there respirophasic ventricular septal motion (septal bounce or shudder)?",
+    options:{"Yes":"MedialEprime","No":"FurtherImaging"}
+  },
+  FurtherImaging:{
+    outcome:"Respirophasic Septal Motion Absent",
+    color:"yellow",
+    note:"Constriction unlikely unless high clinical suspicion → consider CMR, CT, or catheterization."
+  },
+  MedialEprime:{
+    question:"What is the mitral medial e′ velocity?",
+    options:{"> 8 cm/s":"AnnulusReversus","6–8 cm/s":"AnnulusReversus","< 6 cm/s":"FavorsRestriction"}
+  },
+  FavorsRestriction:{
+    outcome:"Favors Restrictive Cardiomyopathy",
+    color:"red",
+    note:"Low medial e′ suggests myocardial disease. Constriction less likely."
+  },
+  AnnulusReversus:{
+    question:"Is there <strong>annulus reversus</strong>?<br><small class='text-gray-500'>(mitral annular e' medial > mitral annular e' lateral)</small>",
+    options:{"Yes":"DefiniteConstriction","No":"HepaticVein"}
+  },
+  DefiniteConstriction:{
+    outcome:"Most Likely: Constrictive Pericarditis",
+    color:"green",
+    note:"Annulus reversus is highly specific for constriction."
+  },
+  HepaticVein:{
+    question:"Hepatic vein Doppler —<br>Diastolic expiratory reversal / forward flow velocity ratio:",
+    options:{"≥ 0.8":"DefiniteConstriction2","< 0.8":"SVCFlow"}
+  },
+  DefiniteConstriction2:{
+    outcome:"Definite Constrictive Pericarditis",
+    color:"green",
+    note:"High expiratory diastolic reversal ratio confirms constriction."
+  },
+  SVCFlow:{
+    question:`Hepatic vein ratio < 0.8<br>→ Check SVC (or SVC-like) Doppler:<br>Is there <strong>inspiratory augmentation of systolic forward flow</strong>?`,
+    options:{"Yes":"PossibleConstriction","No":"IndeterminateOrRestriction"}
+  },
+  PossibleConstriction:{
+    outcome:"Possible Constriction — Consider Confounders",
+    color:"yellow",
+    note:"Inspiratory SVC flow augmentation supports constriction, but consider:<br>• Severe lung disease<br>• Obesity<br>• High intrathoracic pressure swings"
+  },
+  IndeterminateOrRestriction:{
+    outcome:"Indeterminate — Favors Restriction or Mixed",
+    color:"orange",
+    note:"Low hepatic reversal + no SVC augmentation → restriction more likely or mixed physiology."
+  }
+};
+
+const lapPHSteps = {
+  EA_Ratio: {
+    question: "What is the Mitral E/A ratio?",
+    options: { "≤ 0.8": "E_Check", "> 0.8 to < 2": "LARS_Check", "≥ 2": "Age_Check" }
+  },
+  E_Check: { 
+    question: "What is the Mitral E velocity?", 
+    options: { "≤ 50 cm/s": "NormalLAP_PH", "> 50 cm/s": "LARS_Check" } 
+  },
+  LARS_Check: { 
+    question: "What is the Left Atrial Reservoir Strain (LARS)?", 
+    options: { "> 18%": "NormalLAP_PH", "≤ 18%": "ElevatedLAP_PH", "Unavailable": "LateralEe_Check" } 
+  },
+  LateralEe_Check: { 
+    question: "What is the lateral E/e′ ratio?", 
+    options: { "< 8": "NormalLAP_PH", "8 to 13": "IndeterminateLAP_PH", "> 13": "ElevatedLAP_PH" },
+    infoBox: `<div class="info-box mt-4">
+      <p class="leading-tight">Pulmonary hypertension elevates right ventricular systolic pressure, causing the septum to flatten. Therefore, lateral E/e' (not the average of septal and lateral E/e') may be used if E/A ratio is >0.8 and <2.0 and LARS unavailable.</p>
+    </div>`
+  },
+  Age_Check: { 
+    question: "What is the patient's age group?", 
+    options: { "20–39 years": "EA2_Check", "40–65 years": "EA2_Check", ">65 years": "EA2_Check" } 
+  },
+  EA2_Check: {
+    question: () => {
+      const thresholds = { "20–39 years": "< 10", "40–65 years": "< 8", ">65 years": "< 7" };
+      const th = thresholds[ageGroup] || " < 8";
+      return `Is the tissue Doppler e′ velocity reduced?<br><small>(Lateral e′ ${th} cm/s for age ${ageGroup})</small>`;
+    },
+    options: { "Yes": "ElevatedLAP_PH", "No": "IndeterminateLAP_PH" }
+  },
+  NormalLAP_PH: { outcome: "LAP is Normal", color: "green" },
+  ElevatedLAP_PH: { outcome: "LAP is Elevated", color: "red" },
+  IndeterminateLAP_PH: { outcome: "LAP is Indeterminate", color: "yellow" }
+};
+
+const transplantLAPSteps = {
+  EE_Ratio:{
+    question:"What is the average mitral E/e′ ratio?",
+    options:{"< 7":"NormalLAP","> 14":"ElevatedLAP","7 – 14":"ESRiVR_Check"}
+  },
+  ESRiVR_Check:{
+    question:`Can E/SR<sub>IVR</sub> be measured?`,
+    options:{"No":"TR_Check","Yes, ≤ 200 cm":"NormalLAP","Yes, > 200 cm":"ElevatedLAP"},
+    infoBox:`<div class="info-box mt-4"><strong>What E/SR<sub>IVR</sub> Means</strong><br>This ratio compares early diastolic inflow velocity (E) to the global early diastolic strain rate (SR<sub>IVR</sub>) measured via speckle-tracking echocardiography.<br>• SR<sub>IVR</sub> reflects how quickly the myocardium relaxes in early diastole.<br>• A higher ratio suggests slower relaxation relative to inflow — indicating elevated filling pressures.<br>• In heart transplant patients, E/e′ may be unreliable due to reduced e′ from surgery or denervation. E/SR<sub>IVR</sub> provides a more robust, load-independent marker.</div>`
+  },
+  TR_Check:{
+    question:"What is the tricuspid regurgitation (TR) V<sub>max</sub> by CW Doppler?",
+    options:{"≤ 2.8 m/s":"NormalLAP","> 2.8 m/s":"ElevatedLAP","Absent or incomplete":"IndeterminateLAP"}
+  },
+  NormalLAP:{outcome:"LAP is Normal (< 15 mmHg)",color:"green"},
+  ElevatedLAP:{outcome:"LAP is Elevated (≥ 15 mmHg)",color:"red"},
+  IndeterminateLAP:{outcome:"LAP is Indeterminate",color:"yellow"}
+};
+
+/* PRESSURE RECOVERY CALCULATOR */
+const pressureRecoveryHTML = `
+<h2 class="text-lg font-bold text-center mb-3 text-blue-700" style="font-size: clamp(0.9rem, 4vw, 1.125rem);">Pressure Recovery Calculator</h2>
+<div class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl border border-blue-200 shadow-sm mb-4">
+  <div class="grid grid-cols-3 gap-2.5 mb-2.5">
+    <div>
+      <label for="vmax" class="font-semibold text-blue-700 block mb-1" style="font-size: clamp(0.65rem, 2.5vw, 0.75rem);">V<sub>max</sub> (m/s)</label>
+      <input id="vmax" type="number" step="0.01" min="0" value="3.50" class="w-full p-2.5 border border-blue-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition bg-white text-sm">
+    </div>
+    <div>
+      <label for="ava" class="font-semibold text-blue-700 block mb-1" style="font-size: clamp(0.65rem, 2.5vw, 0.75rem);">AVA, cm<sup>2</sup></label>
+      <input id="ava" type="number" step="0.01" min="0.01" value="1.40" class="w-full p-2.5 border border-blue-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition bg-white text-sm">
+    </div>
+    <div>
+      <label for="bsa" class="font-semibold text-blue-700 block mb-1" style="font-size: clamp(0.65rem, 2.5vw, 0.75rem);">BSA, m<sup>2</sup></label>
+      <input id="bsa" type="number" step="0.01" min="0.5" value="1.90" class="w-full p-2.5 border border-blue-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition bg-white text-sm">
+    </div>
+  </div>
+  <div class="grid grid-cols-2 gap-2.5">
+    <div>
+      <label for="ascad" class="font-semibold text-blue-700 block mb-1" style="font-size: clamp(0.65rem, 2.5vw, 0.75rem);">Asc Ao at STJ, cm</label>
+      <input id="ascad" type="number" step="0.01" min="0.1" value="3.00" class="w-full p-2.5 border border-blue-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition bg-white text-sm">
+    </div>
+    <div>
+      <label for="meang" class="font-semibold text-blue-700 block mb-1" style="font-size: clamp(0.65rem, 2.5vw, 0.75rem);">Mean Gradient (mmHg)</label>
+      <input id="meang" type="number" step="0.1" min="0" value="30.0" class="w-full p-2.5 border border-blue-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition bg-white text-sm">
+    </div>
+  </div>
+</div>
+<div class="results bg-gradient-to-br from-sky-50 to-sky-100 p-4 rounded-xl border border-sky-300 shadow-md mb-3">
+  <div class="font-bold text-sky-900 mb-2.5" style="font-size: clamp(0.75rem, 3vw, 0.875rem);">Results</div>
+  <div id="results-container"></div>
+</div>
+<div class="info-box mt-3 mb-3">
+  <p class="leading-tight">If the STJ diameter is small, typically &lt;3.0 cm (adults), and Doppler gradients seem disproportionately high relative to AVA or clinical picture → consider pressure recovery</p>
+</div>
+<p class="text-xs text-gray-500 mt-3 italic text-center">Pressure Recovery (PR) = 4 × Vmax² × 2 × (AVA / A_Asc) × (1 − AVA / A_Asc)</p>
+<p class="text-xs text-black mt-3 text-center">Disclaimer: For educational use only. Not for sole clinical decision-making.</p>
+`;
+
+function renderPressureRecoveryCalculator(){
+  currentView='pressureRecovery';
+  setHomeMode(false);
+  contentBox.innerHTML=pressureRecoveryHTML;
+  navigationBox.innerHTML=`<button onclick="goHome()" class="w-full py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg shadow-md hover:bg-gray-300 transition">Home</button>`;
+  const inputs=['vmax','ava','bsa','ascad','meang'];
+  inputs.forEach(id=>document.getElementById(id).addEventListener('input',calculatePressureRecovery));
+  calculatePressureRecovery();
+}
+
+function calculatePressureRecovery(){
+  const vmax=parseFloat(document.getElementById('vmax').value)||0;
+  const ava=parseFloat(document.getElementById('ava').value)||0;
+  const asca=parseFloat(document.getElementById('ascad').value)||0;
+  const meang=parseFloat(document.getElementById('meang').value)||0;
+  const bsa=parseFloat(document.getElementById('bsa').value)||1;
+  const a_asc=Math.PI*Math.pow(asca/2,2);
+  let pr=0, correctedMean=meang, eli=0;
+  if(vmax>0&&ava>0&&a_asc>0&&ava<a_asc){
+    pr=4*vmax*vmax*2*(ava/a_asc)*(1-ava/a_asc);
+    correctedMean=meang-pr;
+    eli=ava/(ava+pr/4);
+  }
+  document.getElementById('results-container').innerHTML=`
+    <div class="flex justify-between items-center py-2 border-b border-sky-200"><div class="text-xs text-sky-700">Measured Peak Gradient</div><div class="text-sm font-bold text-sky-900">${(4*vmax*vmax).toFixed(1)} mmHg</div></div>
+    <div class="flex justify-between items-center py-2 border-b border-sky-200"><div class="text-xs text-sky-700">Pressure Recovery (PR)</div><div class="text-sm font-bold text-sky-900">${pr.toFixed(1)} mmHg</div></div>
+    <div class="flex justify-between items-center py-2 border-b border-sky-200"><div class="text-xs text-sky-700">Corrected Peak Gradient</div><div class="text-sm font-bold text-sky-900">${(4*vmax*vmax-pr).toFixed(1)} mmHg</div></div>
+    <div class="flex justify-between items-center py-2 border-b border-sky-200"><div class="text-xs text-sky-700">Corrected Mean Gradient</div><div class="text-sm font-bold text-sky-900">${correctedMean.toFixed(1)} mmHg</div></div>
+    <div class="flex justify-between items-center py-2 border-b border-sky-200"><div class="text-xs text-sky-700">Indexed AVA</div><div class="text-sm font-bold text-sky-900">${(ava/bsa).toFixed(2)} cm²/m²</div></div>
+    <div class="flex justify-between items-center py-2"><div class="text-xs text-sky-700">Energy Loss Index (ELI)</div><div class="text-sm font-bold text-sky-900">${eli.toFixed(2)} cm²/m²</div></div>`;
+}
+
+/* PULMONARY HYPERTENSION CALCULATOR */
+const phCalculatorHTML = `
+<h2 class="text-lg font-bold text-center mb-3 text-blue-700" style="font-size: clamp(0.9rem, 4vw, 1.125rem);">Pulmonary Hypertension Calculator</h2>
+<main class="space-y-4">
+<div class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl shadow border border-blue-200">
+<h2 class="text-sm font-bold text-blue-800 mb-3 border-b border-blue-300 pb-2">mPAP Estimation</h2>
+<div class="mb-3">
+<label for="rvot_at" class="block font-semibold text-blue-700 mb-1.5" style="font-size: clamp(0.65rem, 2.5vw, 0.75rem);">RVOT AccT (ms)</label>
+<input type="number" step="1" id="rvot_at" class="input-field bg-white border-blue-300" placeholder="e.g., 120" oninput="calculateRVOTAT()">
+</div>
+<div class="bg-gradient-to-br from-cyan-50 to-cyan-100 p-3.5 rounded-lg border border-cyan-300">
+<p class="font-medium text-cyan-800 mb-1" style="font-size: clamp(0.65rem, 2.5vw, 0.75rem);">Estimated mPAP:</p>
+<p id="pas_result" class="text-2xl font-bold text-cyan-900">0.0 mmHg</p>
+<p id="rvot_status" class="font-semibold mt-1 text-cyan-700" style="font-size: clamp(0.65rem, 2.5vw, 0.75rem);">Enter value to calculate</p>
+</div>
+</div>
+
+<div class="bg-gradient-to-br from-sky-50 to-sky-100 p-4 rounded-xl shadow border border-sky-200">
+<h2 class="text-sm font-bold text-sky-800 mb-3 border-b border-sky-300 pb-2">PAEDP Estimation</h2>
+<div class="mb-3">
+<label for="prv_ed" class="block font-semibold text-sky-700 mb-1.5" style="font-size: clamp(0.65rem, 2.5vw, 0.75rem);">End-Diastolic PR Velocity (m/s)</label>
+<input type="number" step="0.01" id="prv_ed" class="input-field bg-white border-sky-300" placeholder="e.g., 2.5" oninput="calculatePADP()">
+</div>
+<div class="mb-3">
+<label for="rap" class="block font-semibold text-sky-700 mb-1.5" style="font-size: clamp(0.65rem, 2.5vw, 0.75rem);">Estimated RAP (mmHg)</label>
+<select id="rap" class="input-field appearance-none bg-white border-sky-300" onchange="calculatePADP()">
+<option value="3" selected>3 mmHg (Normal)</option>
+<option value="8">8 mmHg (Intermediate)</option>
+<option value="15">15 mmHg (High)</option>
+</select>
+<p class="text-xs text-gray-600 mt-1">Based on IVC size and respiratory change</p>
+</div>
+<div class="bg-gradient-to-br from-teal-50 to-teal-100 p-3.5 rounded-lg border border-teal-300">
+<p class="font-medium text-teal-800 mb-1" style="font-size: clamp(0.65rem, 2.5vw, 0.75rem);">Estimated PAEDP:</p>
+<p id="padp_result" class="text-2xl font-bold text-teal-900">0.0 mmHg</p>
+</div>
+</div>
+</main>
+<div class="mt-4 text-center">
+<p class="font-medium text-gray-700" style="font-size: clamp(0.6rem, 2.2vw, 0.7rem); line-height: 1.6;">RVOT AccT &lt; 120ms: mPAP = 90 - (0.62 × RVAcT)</p>
+<p class="font-medium text-gray-700" style="font-size: clamp(0.6rem, 2.2vw, 0.7rem); line-height: 1.6;">RVOT AccT ≥ 120ms: mPAP = 79 - (0.45 × RVAcT)</p>
+<p class="font-medium text-gray-700" style="font-size: clamp(0.6rem, 2.2vw, 0.7rem); line-height: 1.6;">PAEDP ≈ (4 × PRV_ED²) + RAP</p>
+</div>
+<p class="text-xs text-black mt-4 text-center">Disclaimer: For educational use only. Not for sole clinical decision-making.</p>
+<p class="mt-2 text-xs text-black text-center">Mukherjee et al. (2025). J Am Soc Echocardiogr, 38(3), 141–186.</p>
+<p class="text-xs text-black text-center"><a href="https://doi.org/10.1016/j.echo.2025.01.006" target="_blank" class="underline hover:text-blue-700 text-xs">DOI: 10.1016/j.echo.2025.01.006</a></p>
+`;
+
+function renderPHCalculator(){
+  currentView='pulmonaryHypertension';
+  setHomeMode(false);
+  contentBox.innerHTML=phCalculatorHTML;
+  navigationBox.innerHTML=`<button onclick="goHome()" class="w-full py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg shadow-md hover:bg-gray-300 transition">Home</button>`;
+}
+
+function calculateRVOTAT(){
+  const at=parseFloat(document.getElementById('rvot_at').value);
+  let mPAP=0, status="Invalid input";
+  if(at>0){
+    if(at<120) mPAP=90-(0.62*at);
+    else mPAP=79-(0.45*at);
+    status=mPAP>35?"PH Likely":"PH Unlikely";
+  }
+  document.getElementById('pas_result').textContent=mPAP.toFixed(1)+" mmHg";
+  document.getElementById('rvot_status').textContent=status;
+}
+
+function calculatePADP(){
+  const prv=parseFloat(document.getElementById('prv_ed').value)||0;
+  const rap=parseFloat(document.getElementById('rap').value)||0;
+  const padp=(4*prv*prv)+rap;
+  document.getElementById('padp_result').textContent=padp.toFixed(1)+" mmHg";
+}
+
+/* RESPIRATORY VARIATION CALCULATOR */
+const respiratoryVariationHTML = `
+<h2 class="text-lg font-bold text-center mb-3 text-blue-700" style="font-size: clamp(0.9rem, 4vw, 1.125rem);">Respiratory Variation Calculator</h2>
+<main class="space-y-4">
+<div class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl shadow border border-blue-200">
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+<div><label id="insp_label" class="block font-semibold text-blue-700 mb-1.5" style="font-size: clamp(0.65rem, 2.5vw, 0.75rem);">Inspiratory E Velocity (m/s)</label><input type="number" step="0.01" id="insp_input" class="input-field bg-white border-blue-300" placeholder="e.g., 0.7" oninput="calculateVariation()"></div>
+<div><label id="exp_label" class="block font-semibold text-blue-700 mb-1.5" style="font-size: clamp(0.65rem, 2.5vw, 0.75rem);">Expiratory E Velocity (m/s)</label><input type="number" step="0.01" id="exp_input" class="input-field bg-white border-blue-300" placeholder="e.g., 1.0" oninput="calculateVariation()"></div>
+</div>
+<div class="bg-gradient-to-br from-cyan-50 to-cyan-100 p-3.5 rounded-lg border border-cyan-300">
+<p class="font-medium text-cyan-800 mb-1" style="font-size: clamp(0.65rem, 2.5vw, 0.75rem);">Respiratory Variation</p>
+<p id="variation_result" class="text-2xl font-bold text-cyan-900">0.0%</p>
+</div>
+</div>
+</main>
+<div class="info-box mt-4">
+<ul class="list-disc pl-5 space-y-1">
+<li>Maximal variation typically on first beat after inspiration or expiration onset (vs. second beat in COPD).</li>
+<li>Not a standalone criterion; confirm with other signs like RV diastolic collapse (&gt;1/3 of diastole).</li>
+</ul>
+</div>
+<div class="mt-3 text-center">
+<p class="font-medium text-gray-700" style="font-size: clamp(0.6rem, 2.2vw, 0.7rem); line-height: 1.6;">Variation = [(E_exp - E_insp) / E_exp] × 100%</p>
+<p class="font-medium text-gray-700" style="font-size: clamp(0.6rem, 2.2vw, 0.7rem); line-height: 1.6;">Mitral Variation >30% supports tamponade physiology.</p>
+<p class="font-medium text-gray-700" style="font-size: clamp(0.6rem, 2.2vw, 0.7rem); line-height: 1.6;">Tricuspid Variation >60% supports tamponade (expected negative value).</p>
+</div>
+<p class="text-xs text-black mt-4 text-center">Disclaimer: For educational use only. Not for sole clinical decision-making.</p>
+<p class="mt-2 text-xs text-black text-center">Klein et al. (2013). J Am Soc Echocardiogr, 26(9), 965–1012.</p>
+<p class="text-xs text-black text-center"><a href="https://doi.org/10.1016/j.echo.2013.06.023" target="_blank" class="underline hover:text-blue-700 text-xs">DOI: 10.1016/j.echo.2013.06.023</a></p>
+`;
+
+function renderRespiratoryVariationCalculator(){
+  currentView='respiratoryVariation';
+  setHomeMode(false);
+  contentBox.innerHTML=respiratoryVariationHTML;
+  navigationBox.innerHTML=`<button onclick="goHome()" class="w-full py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg shadow-md hover:bg-gray-300 transition">Home</button>`;
+  calculateVariation();
+}
+
+function calculateVariation(){
+  const insp = parseFloat(document.getElementById('insp_input').value) || 0;
+  const exp = parseFloat(document.getElementById('exp_input').value) || 0;
+  let variation = 0;
+  if (exp > 0 && insp >= 0) {
+    variation = ((exp - insp) / exp) * 100;
+  }
+  document.getElementById('variation_result').textContent = variation.toFixed(1) + '%';
+}
+
+/* CARDIAC OUTPUT CALCULATOR */
+const cardiacOutputHTML = `
+<h2 class="text-lg font-bold text-center mb-3 text-blue-700" style="font-size: clamp(0.9rem, 4vw, 1.125rem);">Cardiac Output &amp; Stroke Volume</h2>
+<main class="space-y-4">
+<div class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl shadow border border-blue-200">
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+<div><label for="lvot_diam" class="block font-semibold text-blue-700 mb-1.5" style="font-size: clamp(0.65rem, 2.5vw, 0.75rem);">LVOT Diameter (cm)</label><input type="number" step="0.01" id="lvot_diam" class="input-field bg-white border-blue-300" placeholder="e.g., 2.0" oninput="calculateCO()"></div>
+<div><label for="lvot_vti" class="block font-semibold text-blue-700 mb-1.5" style="font-size: clamp(0.65rem, 2.5vw, 0.75rem);">LVOT VTI (cm)</label><input type="number" step="0.1" id="lvot_vti" class="input-field bg-white border-blue-300" placeholder="e.g., 20" oninput="calculateCO()"></div>
+<div><label for="hr" class="block font-semibold text-blue-700 mb-1.5" style="font-size: clamp(0.65rem, 2.5vw, 0.75rem);">Heart Rate (bpm)</label><input type="number" step="1" id="hr" class="input-field bg-white border-blue-300" placeholder="e.g., 70" oninput="calculateCO()"></div>
+</div>
+<div>
+<label for="bsa_co" class="block font-semibold text-blue-700 mb-1.5" style="font-size: clamp(0.65rem, 2.5vw, 0.75rem);">Body Surface Area (BSA, m²)</label>
+<input type="number" step="0.01" id="bsa_co" class="input-field bg-white border-blue-300" placeholder="e.g., 1.8" value="1.8" oninput="calculateCO()">
+</div>
+</div>
+
+<div id="result_box" class="bg-gradient-to-br from-cyan-50 to-cyan-100 p-4 rounded-xl border-2 border-cyan-300 shadow">
+<p class="text-sm font-semibold text-cyan-900">Stroke Volume</p>
+<p id="sv_result" class="text-2xl font-bold text-cyan-900">0 ml</p>
+<p id="co_result" class="text-lg font-semibold text-cyan-800 mt-1">0.0 L/min</p>
+<p id="ci_result" class="font-medium text-cyan-700 mt-1.5" style="font-size: clamp(0.7rem, 2.8vw, 0.875rem);">CI: 0.0 L/min/m²</p>
+<p id="severity" class="text-sm font-bold mt-2"></p>
+</div>
+
+<p class="text-xs text-gray-600 mt-3 italic text-center">SV = π × (LVOT_diam/2)² × VTI_LVOT<br>CO = SV × HR / 1000</p>
+</main>
+<p class="text-xs text-black mt-4 text-center">Disclaimer: For educational use only. Not for sole clinical decision-making.</p>
+<p class="mt-2 text-xs text-black text-center">Rudski et al. (2010). J Am Soc Echocardiogr, 23(7), 685–713.</p>
+<p class="text-xs text-black text-center"><a href="https://doi.org/10.1016/j.echo.2010.05.010" target="_blank" class="underline hover:text-blue-700 text-xs">DOI: 10.1016/j.echo.2010.05.010</a></p>
+`;
+
+function renderCardiacOutputCalculator(){
+  currentView='cardiacOutput';
+  setHomeMode(false);
+  contentBox.innerHTML=cardiacOutputHTML;
+  navigationBox.innerHTML=`<button onclick="goHome()" class="w-full py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg shadow-md hover:bg-gray-300 transition">Home</button>`;
+  calculateCO();
+}
+
+function calculateCO(){
+  const diam = parseFloat(document.getElementById('lvot_diam').value) || 0;
+  const vti = parseFloat(document.getElementById('lvot_vti').value) || 0;
+  const hr = parseFloat(document.getElementById('hr').value) || 0;
+  const bsa = parseFloat(document.getElementById('bsa_co').value) || 1.8;
+  let sv = 0, co = 0, ci = 0, severity = "Enter values", color = "cyan";
+  if (diam > 0 && vti > 0 && hr > 0) {
+    const radius = diam / 2;
+    sv = Math.PI * radius * radius * vti;
+    co = (sv * hr) / 1000;
+    ci = co / bsa;
+    if (co >= 4.0 && co <= 8.0) {
+      severity = "Normal Output";
+      color = "green";
+    } else if (co < 4.0) {
+      severity = "Low Output";
+      color = "red";
+    } else {
+      severity = "High Output";
+      color = "orange";
+    }
+  }
+  document.getElementById('sv_result').textContent = sv.toFixed(0) + " ml";
+  document.getElementById('co_result').textContent = co.toFixed(1) + " L/min";
+  document.getElementById('ci_result').textContent = "CI: " + ci.toFixed(1) + " L/min/m²";
+  document.getElementById('severity').textContent = severity;
+  document.getElementById('severity').className = `text-sm font-bold mt-2 text-${color}-700`;
+}
+
+/* INITIALIZATION */
+document.addEventListener('DOMContentLoaded', () => {
+  contentBox = document.getElementById('content');
+  navigationBox = document.getElementById('navigation');
+  renderHome();
+  
+  // Register service worker for PWA functionality
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(registration => {
+        console.log('Service Worker registered successfully:', registration.scope);
+      })
+      .catch(error => {
+        console.log('Service Worker registration failed:', error);
+      });
+  }
+});
+</script>
+</body>
+</html>

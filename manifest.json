@@ -1,0 +1,39 @@
+{
+  "name": "EchoMate: Comprehensive Echo Calculators",
+  "short_name": "EchoMate",
+  "description": "Comprehensive Echo Suite for Educational Use - Diastolic Function, LAP Estimation, Pulmonary Hypertension, and more",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#bfdbfe",
+  "theme_color": "#1e40af",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["medical", "education", "health"],
+  "screenshots": [
+    {
+      "src": "screenshot-mobile.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ]
+}
